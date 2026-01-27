@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import CoreServices from './components/CoreServices'
 
 const page = () => {
   return (
@@ -7,6 +8,7 @@ const page = () => {
       <Navbar />
       <div className='pt-10'>
         <Hero />
+        <CoreServices />
       </div>
     </div>
   )
