@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 const Navbar = () => {
     const [activeTab, setActiveTab] = useState('Home');
-    const navLinks = ['Home', 'Services', 'Portfolio', 'About', 'Contact'];
+    const navLinks = ['Home', 'Services', , 'About', 'Contact'];
 
     return (
         // The 'font-sans' class here triggers Cabinet Grotesk based on your config
