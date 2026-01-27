@@ -13,9 +13,9 @@ const Navbar = () => {
             {/* Logo Section */}
             <div className="flex items-center space-x-2 shrink-0">
                 <Image
-                    src="./logo.png"
-                    height={100}
-                    width={100}
+                    src="/logoo.png"
+                    height={50}
+                    width={50}
                     alt="Company Logo" // Required by Next.js
                 />
                 {/* font-bold matches Cabinet Grotesk 700 */}
