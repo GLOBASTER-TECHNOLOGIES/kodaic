@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Hexagon, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation'; // Import this to track active page
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname(); // Get current path
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -17,6 +19,14 @@ const Navbar = () => {
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];
+
+  // Sync active tab with current URL path automatically
+  useEffect(() => {
+    const currentLink = navLinks.find(link => link.href === pathname);
+    if (currentLink) {
+      setActiveTab(currentLink.name);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +46,6 @@ const Navbar = () => {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        // Dynamic Padding: shrinks from py-8 (tall) to py-4 (compact)
         className={`fixed top-0 left-0 z-50 w-full font-['Cabinet_Grotesk',sans-serif] transition-all duration-500 ease-in-out ${
             isScrolled ? 'py-4 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm' : 'py-8 bg-transparent'
         }`}
@@ -47,11 +56,9 @@ const Navbar = () => {
           {/* 1. LOGO SECTION (Left) */}
           <div className="flex-shrink-0 z-20">
             <Link href="/" className="flex items-center gap-3 group">
-              {/* <div className={`p-2 rounded-xl transition-all duration-500 ${isScrolled ? 'bg-[#112D4E] scale-90' : 'bg-white shadow-xl shadow-black/5 scale-100'}`}>
-              </div> */}
-                <Image src="/logoo.png" height={50} width={50} alt='logo' />
+              <Image src="/logoo.png" height={50} width={50} alt='logo' />
               <span className={`text-2xl translate-y-0.5 font-black tracking-tight transition-colors duration-300 ${isScrolled ? 'text-[#112D4E]' : 'text-[#112D4E]'}`}>
-                Kodiac
+                Kodia
               </span>
             </Link>
           </div>
@@ -59,20 +66,20 @@ const Navbar = () => {
           {/* 2. DYNAMIC MENU LIST (Absolute Center X & Y) */}
           <motion.div 
             layout
-            // KEY CHANGE: top-1/2 -translate-y-1/2 locks it to vertical center
             className={`hidden lg:flex items-center absolute left-0 right-0 mx-auto w-fit top-1/2 -translate-y-1/2 z-10`}
           >
              <motion.div 
                layout
                className={`flex items-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
                  isScrolled 
-                 ? 'bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/5 p-1.5 gap-1' // Scrolled: Compact Pill
-                 : 'bg-transparent border-transparent p-0 gap-8' // Top: Wide & Transparent
+                 ? 'bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/5 p-1.5 gap-1' 
+                 : 'bg-transparent border-transparent p-0 gap-8' 
                }`}
              >
                 {navLinks.map((link) => (
-                  <button
+                  <Link
                     key={link.name}
+                    href={link.href}
                     onClick={() => setActiveTab(link.name)}
                     className={`relative rounded-full text-sm font-bold transition-all duration-300 ${
                         isScrolled ? 'px-5 py-2' : 'px-2 py-1'
@@ -103,7 +110,7 @@ const Navbar = () => {
                          transition={{ duration: 0.3 }}
                        />
                     )}
-                  </button>
+                  </Link>
                 ))}
              </motion.div>
           </motion.div>
