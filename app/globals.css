@@ -1,14 +1,18 @@
-@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,500,700,400&display=swap');
+@import url("https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,500,700,400&display=swap");
 @import "tailwindcss";
 
 /* Apply it globally or create utility classes */
 body {
-  font-family: 'Cabinet Grotesk', sans-serif;
+  font-family: "Cabinet Grotesk", sans-serif;
 }
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 @theme inline {
