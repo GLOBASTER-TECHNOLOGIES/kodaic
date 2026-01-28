@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Hexagon, Menu, X, ArrowRight } from 'lucide-react';
+import { Hexagon, Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
@@ -19,7 +20,6 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Trigger size reduction after 50px of scrolling
       setIsScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
@@ -35,77 +35,88 @@ const Navbar = () => {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        // Dynamic padding: py-6 when at top, py-3 when scrolling
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        // Dynamic Padding: shrinks from py-8 (tall) to py-4 (compact)
         className={`fixed top-0 left-0 z-50 w-full font-['Cabinet_Grotesk',sans-serif] transition-all duration-500 ease-in-out ${
-          isScrolled 
-            ? 'bg-white/80 backdrop-blur-xl border-b border-slate-200/50 py-3 shadow-md' 
-            : 'bg-transparent py-8'
+            isScrolled ? 'py-4 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm' : 'py-8 bg-transparent'
         }`}
       >
-        {/* Centered container with max-width */}
-        <div className="max-w-7xl mx-auto px-8 lg:px-12 flex items-center justify-between">
+        {/* Container */}
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8 flex items-center justify-between">
           
-          {/* Left: Logo */}
-          <div className="flex-1 flex justify-start">
+          {/* 1. LOGO SECTION (Left) */}
+          <div className="flex-shrink-0 z-20">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className={`p-2 rounded-xl transition-all duration-300 ${isScrolled ? 'bg-[#112D4E] scale-90' : 'bg-white shadow-xl shadow-black/5 scale-110'}`}>
-                <Hexagon 
-                  className={`w-6 h-6 transition-colors ${isScrolled ? 'text-white' : 'text-[#112D4E]'}`} 
-                  strokeWidth={2.5} 
-                />
-              </div>
-              <span className={`text-2xl font-black tracking-tight transition-colors duration-300 ${isScrolled ? 'text-[#112D4E]' : 'text-[#112D4E]'}`}>
-                Kodia
+              {/* <div className={`p-2 rounded-xl transition-all duration-500 ${isScrolled ? 'bg-[#112D4E] scale-90' : 'bg-white shadow-xl shadow-black/5 scale-100'}`}>
+              </div> */}
+                <Image src="/logoo.png" height={50} width={50} alt='logo' />
+              <span className={`text-2xl translate-y-0.5 font-black tracking-tight transition-colors duration-300 ${isScrolled ? 'text-[#112D4E]' : 'text-[#112D4E]'}`}>
+                Kodiac
               </span>
             </Link>
           </div>
 
-          {/* Center: Spread out Desktop Links */}
-          <div className="hidden lg:flex items-center gap-2 bg-white/40 backdrop-blur-md p-1.5 rounded-full border border-white/40 shadow-sm">
-            {navLinks.map((link) => (
-              <button
-                key={link.name}
-                onClick={() => setActiveTab(link.name)}
-                className="relative px-6 py-2 rounded-full text-sm font-bold transition-all"
-              >
-                <span className={`relative z-10 transition-colors duration-300 ${activeTab === link.name ? 'text-white' : 'text-slate-600 hover:text-[#112D4E]'}`}>
-                  {link.name}
-                </span>
-
-                {activeTab === link.name && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 bg-[#112D4E] rounded-full shadow-lg shadow-[#112D4E]/20"
-                    transition={{ type: "spring", bounce: 0.25, duration: 0.5 }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Right: Action Buttons */}
-          <div className="hidden md:flex flex-1 justify-end items-center gap-6">
-             <button className="text-sm font-bold text-slate-600 hover:text-[#112D4E] transition-colors">
-              Log In
-            </button>
-            <button className={`flex items-center gap-2 px-7 py-2.5 rounded-full font-bold text-sm transition-all duration-300 ${
-              isScrolled 
-              ? 'bg-[#112D4E] text-white shadow-lg shadow-[#112D4E]/20' 
-              : 'bg-white text-[#112D4E] border border-slate-200'
-            }`}>
-              Get Started
-              <ArrowRight size={16} />
-            </button>
-          </div>
-
-          {/* Mobile Button */}
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-[#112D4E]"
+          {/* 2. DYNAMIC MENU LIST (Absolute Center X & Y) */}
+          <motion.div 
+            layout
+            // KEY CHANGE: top-1/2 -translate-y-1/2 locks it to vertical center
+            className={`hidden lg:flex items-center absolute left-0 right-0 mx-auto w-fit top-1/2 -translate-y-1/2 z-10`}
           >
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+             <motion.div 
+               layout
+               className={`flex items-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+                 isScrolled 
+                 ? 'bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/5 p-1.5 gap-1' // Scrolled: Compact Pill
+                 : 'bg-transparent border-transparent p-0 gap-8' // Top: Wide & Transparent
+               }`}
+             >
+                {navLinks.map((link) => (
+                  <button
+                    key={link.name}
+                    onClick={() => setActiveTab(link.name)}
+                    className={`relative rounded-full text-sm font-bold transition-all duration-300 ${
+                        isScrolled ? 'px-5 py-2' : 'px-2 py-1'
+                    }`}
+                  >
+                    <span className={`relative z-10 transition-colors duration-300 ${
+                        activeTab === link.name 
+                            ? (isScrolled ? 'text-white' : 'text-[#112D4E]') 
+                            : 'text-slate-500 hover:text-[#112D4E]'
+                    }`}>
+                      {link.name}
+                    </span>
+
+                    {/* Active Background (Scrolled Pill) */}
+                    {activeTab === link.name && isScrolled && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-[#112D4E] rounded-full shadow-md"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    
+                    {/* Active Underline (Top State) */}
+                    {activeTab === link.name && !isScrolled && (
+                         <motion.div
+                         layoutId="activeTabUnderline"
+                         className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#112D4E]"
+                         transition={{ duration: 0.3 }}
+                       />
+                    )}
+                  </button>
+                ))}
+             </motion.div>
+          </motion.div>
+
+          {/* 3. MOBILE TOGGLE */}
+          <div className="flex-1 flex justify-end lg:hidden z-20">
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 text-[#112D4E]"
+            >
+              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Dropdown */}
@@ -115,7 +126,7 @@ const Navbar = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-white/95 backdrop-blur-2xl border-b border-slate-100 overflow-hidden"
+              className="lg:hidden fixed top-[80px] left-0 right-0 bg-white/95 backdrop-blur-2xl border-b border-slate-100 overflow-hidden shadow-2xl z-10"
             >
               <div className="px-8 py-10 space-y-6 flex flex-col items-center">
                 {navLinks.map((link) => (
@@ -128,9 +139,6 @@ const Navbar = () => {
                     {link.name}
                   </Link>
                 ))}
-                <button className="w-full bg-[#112D4E] text-white py-4 rounded-2xl font-bold shadow-xl">
-                  Get Started
-                </button>
               </div>
             </motion.div>
           )}
