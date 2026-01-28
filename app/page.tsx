@@ -7,7 +7,7 @@ import CTASection from './components/CTASection'
 const page = () => {
   return (
     <div className='relative'>
-      <div className='pt-10'>
+      <div className=''>
         <Hero />
         <CoreServices />
         <CTASection />
