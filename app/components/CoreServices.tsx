@@ -1,83 +1,70 @@
 "use client";
+
 import React from 'react';
-import { Cloud, Globe, Smartphone, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Globe, Smartphone, ShieldCheck, ArrowRight } from 'lucide-react';
 
 const services = [
   {
-    icon: Cloud,
-    title: "Cloud Computing",
-    description: "Scalable infrastructure and cloud-native solutions that grow with your business.",
-    link: "#"
-  },
-  {
     icon: Globe,
     title: "Web Development",
-    description: "Modern, responsive web applications built with cutting-edge technologies.",
-    link: "#"
+    description: "Building fast, SEO-optimized, and responsive web applications with modern frameworks.",
   },
   {
     icon: Smartphone,
     title: "Mobile Development",
-    description: "Native and cross-platform mobile apps that deliver exceptional user experiences.",
-    link: "#"
+    description: "Creating seamless native and cross-platform mobile experiences for iOS and Android.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Cyber Security",
+    description: "Ensuring your digital assets are protected with industry-leading security protocols.",
   }
 ];
 
 const CoreServices = () => {
   return (
-    <section className="relative w-full min-h-screen flex flex-col justify-center py-20 bg-white font-sans">
-      
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
+    <section className="w-full min-h-screen flex flex-col justify-center py-20 bg-white font-sans">
+      <div className="max-w-6xl mx-auto px-6 w-full">
         
-        {/* Header Section */}
-        <div className="text-center mb-20">
-          <span className="text-blue-500 font-bold tracking-wider uppercase text-sm mb-3 block">
-            What We Do
-          </span>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#1e2f4d] mb-6 tracking-tight">
-            Core Services
+        {/* Header - Simplified */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
+            Our Core Services
           </h2>
-          <p className="max-w-2xl mx-auto text-lg text-slate-500">
-            End-to-end technology solutions designed to accelerate your business growth
+          <p className="text-lg text-slate-500 max-w-xl mx-auto">
+            Focused technology solutions built to scale your digital presence.
           </p>
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+        {/* Services Grid - Clean Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div 
-              key={index} 
-              className="group bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-2 transition-all duration-300"
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="p-8 rounded-2xl border border-slate-100 bg-slate-50/30 hover:bg-white hover:border-blue-100 hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-300 group"
             >
-              {/* Icon Container */}
-              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-8 group-hover:bg-blue-600 transition-colors duration-300">
-                <service.icon 
-                  size={28} 
-                  className="text-blue-600 group-hover:text-white transition-colors duration-300" 
-                />
+              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                <service.icon size={24} />
               </div>
 
-              {/* Content */}
-              <h3 className="text-2xl font-bold text-[#1e2f4d] mb-4">
+              <h3 className="text-xl font-bold text-slate-900 mb-3">
                 {service.title}
               </h3>
-              
-              <p className="text-slate-500 leading-relaxed mb-8">
+
+              <p className="text-slate-500 text-sm leading-relaxed mb-6">
                 {service.description}
               </p>
 
-              {/* Interactive Link */}
-              <a 
-                href={service.link} 
-                className="inline-flex items-center text-blue-600 font-bold group/link"
-              >
-                Learn more
-                <ArrowRight 
-                  size={18} 
-                  className="ml-2 transition-transform duration-300 group-hover/link:translate-x-1" 
-                />
-              </a>
-            </div>
+              <div className="flex items-center text-sm font-bold text-blue-600 cursor-pointer">
+                <span>View Details</span>
+                <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </motion.div>
           ))}
         </div>
 
