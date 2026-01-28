@@ -13,13 +13,13 @@ if (typeof window !== "undefined") {
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const footerRef = useRef<HTMLElement>(null);
-  
+
   // Refs for GSAP quickSetters
   const xTo = useRef<any>();
   const yTo = useRef<any>();
 
   useGSAP(() => {
-    // 1. Content Entrance
+    // 1. Entrance Animation
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: footerRef.current,
@@ -28,15 +28,14 @@ const Footer = () => {
       }
     });
 
-    tl.fromTo(".footer-content", 
+    tl.fromTo(".footer-content",
       { y: 30, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power2.out" }
     );
 
-    // 2. Spotlight Physics (Adjusted for "Heavy" feel)
-    // duration: 0.6 creates that slight "Sheryians" lag/drag effect
-    xTo.current = gsap.quickTo(footerRef.current, "--x", { duration: 0.6, ease: "power4.out" });
-    yTo.current = gsap.quickTo(footerRef.current, "--y", { duration: 0.6, ease: "power4.out" });
+    // 2. Initialize Spotlight Physics
+    xTo.current = gsap.quickTo(footerRef.current, "--x", { duration: 0.4, ease: "power2.out" });
+    yTo.current = gsap.quickTo(footerRef.current, "--y", { duration: 0.4, ease: "power2.out" });
 
   }, { scope: footerRef });
 
@@ -48,30 +47,32 @@ const Footer = () => {
   };
 
   const handleMouseEnter = () => {
-    gsap.to(".spotlight-layer", { opacity: 1, duration: 0.3 });
+    gsap.to(".spotlight-layer", { opacity: 1, duration: 0.3, ease: "power2.out" });
   };
 
   const handleMouseLeave = () => {
-    gsap.to(".spotlight-layer", { opacity: 0, duration: 0.3 });
+    gsap.to(".spotlight-layer", { opacity: 0, duration: 0.3, ease: "power2.out" });
   };
 
   return (
-    <footer 
+    <footer
       ref={footerRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className="relative bg-[#112D4E] text-white font-sans overflow-hidden border-t border-white/10 min-h-screen flex flex-col justify-between"
     >
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500,400&display=swap');
       `}} />
 
       {/* --- CONTENT SECTION --- */}
-      <div className="relative z-30 mx-auto max-w-7xl px-6 pt-20 lg:px-8 w-full font-['Cabinet_Grotesk',sans-serif] pointer-events-none">
-        
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16 mb-12 md:mb-24">
-          
+      {/* Added pb-32 to ensure content doesn't visually crash into the big text at the bottom */}
+      <div className="relative z-30 mx-auto max-w-7xl px-6 pt-24 pb-32 lg:px-8 w-full font-['Cabinet_Grotesk',sans-serif] pointer-events-none flex-grow">
+
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16 mb-16">
+
           {/* Brand */}
           <div className="footer-content space-y-6 pointer-events-auto">
             <div className="flex items-center gap-3">
@@ -125,7 +126,7 @@ const Footer = () => {
         </div>
 
         {/* Bottom Metadata */}
-        <div className="footer-content pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-medium text-blue-100/50 pb-20 pointer-events-auto">
+        <div className="footer-content pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-medium text-blue-100/50 pointer-events-auto">
           <p>© {currentYear} Kodia. All rights reserved.</p>
           <div className="flex items-center gap-8">
             <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
@@ -135,28 +136,36 @@ const Footer = () => {
       </div>
 
 
+      {/* --- SPOTLIGHT TEXT LAYERS --- */}
       {/* Layer 1: Ghostly Outline (Always Visible) */}
-      <div className="absolute inset-0 z-10 flex items-end justify-center overflow-hidden pointer-events-none pb-10">
-        <h1 
-          className="font-['Cabinet_Grotesk'] font-extrabold text-[22vw] leading-[0.8] tracking-tighter uppercase whitespace-nowrap select-none text-transparent opacity-20"
-          style={{ WebkitTextStroke: '2px rgba(255, 255, 255, 0.1)' }}
+      {/* justify-center and items-end ensures it sits perfectly at the bottom center */}
+      <div>
+
+        <div className="absolute inset-0 z-10 flex items-end justify-center overflow-hidden pointer-events-none">
+          <h1
+            className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] leading-[0.75] tracking-tighter uppercase whitespace-nowrap select-none text-transparent opacity-20"
+            style={{ WebkitTextStroke: '2px rgba(255, 255, 255, 0.1)' }}
+          >
+            Kodaic
+          </h1>
+        </div>
+
+        {/* Layer 2: The Spotlight Reveal */}
+        <div
+          className="spotlight-layer absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none opacity-0"
+          style={{
+            maskImage: `radial-gradient(circle 350px at calc(var(--x) * 1px) calc(var(--y) * 1px), black 20%, transparent 100%)`,
+            WebkitMaskImage: `radial-gradient(circle 350px at calc(var(--x) * 1px) calc(var(--y) * 1px), black 20%, transparent 100%)`,
+          }}
         >
-          Kodaic
-        </h1>
+          <h1 className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] leading-[0.75] tracking-tighter uppercase whitespace-nowrap select-none text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
+            Kodaic
+          </h1>
+        </div>
       </div>
 
-      {/* Layer 2: The Spotlight Reveal */}
-      <div 
-        className="spotlight-layer absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none pb-10 opacity-0"
-        style={{
-          maskImage: `radial-gradient(circle 350px at calc(var(--x) * 1px) calc(var(--y) * 1px), black 20%, transparent 100%)`,
-          WebkitMaskImage: `radial-gradient(circle 350px at calc(var(--x) * 1px) calc(var(--y) * 1px), black 20%, transparent 100%)`,
-        }}
-      >
-        
-        <h1 className="font-['Cabinet_Grotesk'] font-extrabold text-[22vw] leading-[0.8] tracking-tighter uppercase whitespace-nowrap select-none text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
-          Kodaic
-        </h1>
+      <div className="py-10">
+        <p className="text-center">© 2026 Kodia. All rights reserved.</p>
       </div>
 
     </footer>
