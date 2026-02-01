@@ -15,6 +15,11 @@ const SpotlightBrandTwo = () => {
 
   const hasScrolledRef = useRef(false);
 
+  // RAF smoothing refs
+  const mouseX = useRef(0);
+  const mouseY = useRef(0);
+  const rafId = useRef<number | null>(null);
+
   useGSAP(() => {
     if (!containerRef.current) return;
 
@@ -43,7 +48,6 @@ const SpotlightBrandTwo = () => {
     );
   }, { scope: containerRef });
 
-  // Reset scroll lock when back in view
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -58,18 +62,12 @@ const SpotlightBrandTwo = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (
-      !containerRef.current ||
-      !xTo.current ||
-      !yTo.current ||
-      !xTextTo.current ||
-      !yTextTo.current
-    ) return;
+  const animate = () => {
+    if (!containerRef.current || !xTo.current || !yTo.current) return;
 
     const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = mouseX.current - rect.left;
+    const y = mouseY.current - rect.top;
 
     xTo.current(x);
     yTo.current(y);
@@ -77,8 +75,19 @@ const SpotlightBrandTwo = () => {
     const cx = rect.width / 2;
     const cy = rect.height / 2;
 
-    xTextTo.current((x - cx) * -0.1);
-    yTextTo.current((y - cy) * -0.1);
+    xTextTo.current?.((x - cx) * -0.1);
+    yTextTo.current?.((y - cy) * -0.1);
+
+    rafId.current = requestAnimationFrame(animate);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    mouseX.current = e.clientX;
+    mouseY.current = e.clientY;
+
+    if (!rafId.current) {
+      rafId.current = requestAnimationFrame(animate);
+    }
   };
 
   const handleMouseEnter = () => {
@@ -87,8 +96,10 @@ const SpotlightBrandTwo = () => {
       duration: 0.6,
       ease: "power3.out",
     });
+
+    // ✅ Dim, don't hide
     gsap.to(".outline-layer", {
-      opacity: 0.15,
+      opacity: 0.08,
       duration: 0.6,
       ease: "power3.out",
     });
@@ -100,6 +111,7 @@ const SpotlightBrandTwo = () => {
       duration: 0.6,
       ease: "power3.out",
     });
+
     gsap.to(".outline-layer", {
       opacity: 0.35,
       duration: 0.6,
@@ -108,6 +120,11 @@ const SpotlightBrandTwo = () => {
 
     xTextTo.current?.(0);
     yTextTo.current?.(0);
+
+    if (rafId.current) {
+      cancelAnimationFrame(rafId.current);
+      rafId.current = null;
+    }
   };
 
   const handleWheel = (e: React.WheelEvent) => {
@@ -136,7 +153,6 @@ const SpotlightBrandTwo = () => {
         "--ty": "0px",
       } as React.CSSProperties}
     >
-      {/* Fonts + performance hints */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -144,22 +160,19 @@ const SpotlightBrandTwo = () => {
 
             .spotlight-reveal,
             .outline-layer,
-            .spotlight-text-layer h1 {
+            h1 {
               will-change: transform, opacity;
             }
           `,
         }}
       />
 
-      {/* Static backdrop (cheap) */}
-      <div className="absolute inset-0 bg-black" />
-
       <div className="spotlight-text-layer relative w-full h-full flex items-center justify-center">
 
         {/* Outline */}
         <div className="outline-layer absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <h1
-            className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] leading-none tracking-tighter uppercase text-transparent"
+            className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] uppercase text-transparent"
             style={{
               WebkitTextStroke: "3px rgba(255,255,255,0.55)",
               opacity: 0.35,
@@ -169,23 +182,20 @@ const SpotlightBrandTwo = () => {
           </h1>
         </div>
 
-        {/* Spotlight reveal */}
+        {/* Spotlight */}
         <div
           className="spotlight-reveal absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0"
           style={{
             maskImage:
-              "radial-gradient(circle 400px at var(--x) var(--y), black 12%, transparent 70%)",
+              "radial-gradient(circle 280px at var(--x) var(--y), black 12%, transparent 70%)",
             WebkitMaskImage:
-              "radial-gradient(circle 400px at var(--x) var(--y), black 12%, transparent 70%)",
+              "radial-gradient(circle 280px at var(--x) var(--y), black 12%, transparent 70%)",
           }}
         >
-          <div
-            className="will-change-transform"
-            style={{ transform: "translate(var(--tx), var(--ty))" }}
-          >
+          <div style={{ transform: "translate(var(--tx), var(--ty))" }}>
             <h1
               ref={textRef}
-              className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] leading-none tracking-tighter uppercase text-white drop-shadow-[0_0_60px_rgba(255,255,255,0.55)]"
+              className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] uppercase text-white drop-shadow-[0_0_60px_rgba(255,255,255,0.55)]"
             >
               Kodaic
             </h1>
