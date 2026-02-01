@@ -103,7 +103,7 @@ const SpotlightBrandTwo = () => {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full h-[45vh] md:h-[55vh] flex items-center justify-center overflow-hidden bg-transparent cursor-crosshair"
+      className="relative w-full  h-screen -[45vh] md:h -[55vh] flex items-center justify-center overflow-hidden bg-transparent cursor-crosshair"
       style={{
         "--x": "-500px",
         "--y": "-500px",
