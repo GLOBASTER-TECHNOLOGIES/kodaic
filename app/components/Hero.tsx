@@ -123,7 +123,7 @@ const Hero = () => {
     }), []);
 
     return (
-        <section className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 pt-28 pb-20 overflow-hidden bg-white font-sans">
+        <section id='starting-section' className="relative w-full min-h-screen flex flex-col items-center justify-center px-4 pt-28 pb-20 overflow-hidden bg-white font-sans">
 
             {init && (
                 <div className="absolute inset-0 z-0">
