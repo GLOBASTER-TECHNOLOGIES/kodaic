@@ -14,7 +14,7 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
 }
 
-const Navbar = () => {
+const Navbar = ({ hidden = false }: { hidden?: boolean }) => {
   const [activeTab, setActiveTab] = useState('Home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -46,11 +46,9 @@ const Navbar = () => {
   }, []);
 
   // 3. GSAP ENTRANCE ANIMATION
-  // This creates the "Premium" staggered load effect
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
-    // Ensure initial state (hidden) is set before animating
     gsap.set([logoRef.current, ".nav-item", ".mobile-toggle"], { y: -20, opacity: 0 });
 
     tl.to(logoRef.current, { y: 0, opacity: 1, duration: 1 })
@@ -68,10 +66,12 @@ const Navbar = () => {
       {/* Main Container for GSAP Scope */}
       <div ref={containerRef}>
         <motion.nav
-          // Removed Framer's initial={{ y: -100 }} to let GSAP handle the entrance
-          className={`fixed top-0 left-0 z-50 w-full font-['Cabinet_Grotesk',sans-serif] transition-all duration-700 cubic-bezier(0.22, 1, 0.36, 1) ${
-              isScrolled ? 'py-4 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm' : 'py-8 bg-transparent'
-          }`}
+          className={`fixed top-0 left-0 z-50 w-full font-['Cabinet_Grotesk',sans-serif] transition-all duration-700 cubic-bezier(0.22, 1, 0.36, 1)
+            ${hidden ? 'opacity-0 pointer-events-none' : 'opacity-100'}
+            ${isScrolled
+              ? 'py-4 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm'
+              : 'py-8 bg-transparent'
+            }`}
         >
           {/* Inner Content */}
           <div className="relative mx-auto max-w-7xl px-6 lg:px-8 flex items-center justify-between">
@@ -86,70 +86,65 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* 2. MENU LIST (Center Logic) */}
+            {/* 2. MENU LIST */}
             <motion.div 
               layout
-              className={`hidden lg:flex items-center absolute left-0 right-0 mx-auto w-fit top-1/2 -translate-y-1/2 z-10`}
+              className="hidden lg:flex items-center absolute left-0 right-0 mx-auto w-fit top-1/2 -translate-y-1/2 z-10"
             >
-               <motion.div 
-                 ref={linksRef}
-                 layout
-                 className={`flex items-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
-                   isScrolled 
-                   ? 'bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/5 p-1.5 gap-1' 
-                   : 'bg-transparent border-transparent p-0 gap-8' 
-                 }`}
-               >
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      onClick={() => setActiveTab(link.name)}
-                      className={`nav-item opacity-0 relative rounded-full text-sm font-bold transition-all duration-300 overflow-hidden group ${
-                          isScrolled ? 'px-5 py-2' : 'px-2 py-1'
-                      }`}
-                    >
-                      {/* Premium "Rolling Text" Effect Structure */}
-                      <div className="relative overflow-hidden block">
-                        {/* Visible Text */}
-                        <span className={`block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full ${
-                            activeTab === link.name 
-                                ? (isScrolled ? 'text-white' : 'text-[#112D4E]') 
-                                : 'text-slate-500'
-                        }`}>
-                          {link.name}
-                        </span>
-                        
-                        {/* Hidden Text (Rolls up on hover) */}
-                        <span className={`absolute top-full left-0 block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-full ${
-                            activeTab === link.name 
-                                ? (isScrolled ? 'text-white' : 'text-[#112D4E]') 
-                                : 'text-[#112D4E]'
-                        }`}>
-                          {link.name}
-                        </span>
-                      </div>
+              <motion.div 
+                ref={linksRef}
+                layout
+                className={`flex items-center rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+                  isScrolled 
+                    ? 'bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/5 p-1.5 gap-1' 
+                    : 'bg-transparent border-transparent p-0 gap-8'
+                }`}
+              >
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setActiveTab(link.name)}
+                    className={`nav-item opacity-0 relative rounded-full text-sm font-bold transition-all duration-300 overflow-hidden group ${
+                      isScrolled ? 'px-5 py-2' : 'px-2 py-1'
+                    }`}
+                  >
+                    <div className="relative overflow-hidden block">
+                      <span className={`block transition-transform duration-500 group-hover:-translate-y-full ${
+                        activeTab === link.name 
+                          ? (isScrolled ? 'text-white' : 'text-[#112D4E]') 
+                          : 'text-slate-500'
+                      }`}>
+                        {link.name}
+                      </span>
 
-                      {/* Active Background Pill */}
-                      {activeTab === link.name && isScrolled && (
-                        <motion.div
-                          layoutId="activeTab"
-                          className="absolute inset-0 bg-[#112D4E] rounded-full shadow-md -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
-                      )}
-                      
-                      {/* Active Underline */}
-                      {activeTab === link.name && !isScrolled && (
-                           <motion.div
-                           layoutId="activeTabUnderline"
-                           className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#112D4E]"
-                           transition={{ duration: 0.3 }}
-                         />
-                      )}
-                    </Link>
-                  ))}
-               </motion.div>
+                      <span className={`absolute top-full left-0 block transition-transform duration-500 group-hover:-translate-y-full ${
+                        activeTab === link.name 
+                          ? (isScrolled ? 'text-white' : 'text-[#112D4E]') 
+                          : 'text-[#112D4E]'
+                      }`}>
+                        {link.name}
+                      </span>
+                    </div>
+
+                    {activeTab === link.name && isScrolled && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-[#112D4E] rounded-full shadow-md -z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
+                    {activeTab === link.name && !isScrolled && (
+                      <motion.div
+                        layoutId="activeTabUnderline"
+                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#112D4E]"
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                  </Link>
+                ))}
+              </motion.div>
             </motion.div>
 
             {/* 3. MOBILE TOGGLE */}
