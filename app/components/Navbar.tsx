@@ -113,7 +113,7 @@ const Navbar = () => {
             <div ref={logoRef} className="flex-shrink-0 z-20 opacity-0">
               <Link href="/" className="flex items-center gap-3 group">
                 <Image src="/logoo.png" height={50} width={50} alt='logo' className="w-10 h-10 object-contain" />
-                <span className="text-2xl translate-y-0.5 font-black tracking-tight text-[#112D4E]">Kodia</span>
+                <span className="text-2xl translate-y-0.5 font-black tracking-tight text-[#112D4E]">Kodiac</span>
               </Link>
             </div>
             
