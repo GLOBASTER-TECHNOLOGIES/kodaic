@@ -37,11 +37,6 @@ const CoreServices = () => {
         @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500,400&display=swap');
       `}} />
 
-      {/* Background Decor */}
-      <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      </div>
-
       {/* 2. Apply Font */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full font-['Cabinet_Grotesk',sans-serif]">
         
