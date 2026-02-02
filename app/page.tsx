@@ -13,7 +13,6 @@ const page = () => {
         <Hero />
         <CoreServices />
         <CTASection />
-        <Footer />
       </div>
     </div>
   );
