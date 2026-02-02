@@ -5,7 +5,11 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
-const SpotlightBrandTwo = () => {
+const SpotlightBrandTwo = ({
+  onVisible,
+}: {
+  onVisible?: (visible: boolean) => void;
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLHeadingElement>(null);
 
@@ -57,14 +61,22 @@ const SpotlightBrandTwo = () => {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) hasScrolledRef.current = false;
+        hasScrolledRef.current = false;
+        onVisible?.(entry.isIntersecting);
       },
-      { threshold: 0.6 }
+      {
+        // ✅ FIXED: Changed to 0.15
+        // This means: "If less than 15% of the black screen is visible, SHOW the navbar."
+        // This triggers the navbar slightly earlier, ensuring it's visible when you land on Hero.
+        threshold: 0.15, 
+        rootMargin: "0px", 
+      }
     );
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [onVisible]);
+
 
   const animate = () => {
     if (!containerRef.current || !xTo.current || !yTo.current) return;
@@ -131,12 +143,18 @@ const SpotlightBrandTwo = () => {
   };
 
   const handleWheel = (e: React.WheelEvent) => {
-    if (hasScrolledRef.current) return;
+    // if (hasScrolledRef.current) return;
 
     if (e.deltaY > 0) {
       hasScrolledRef.current = true;
       document
         .querySelector("#starting-section")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+    if (e.deltaY < 0) {
+      hasScrolledRef.current = true;
+      document
+        .querySelector("#starting-band")
         ?.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -148,6 +166,7 @@ const SpotlightBrandTwo = () => {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      id="starting-band"
       className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-black cursor-crosshair"
       style={
         {
@@ -184,7 +203,6 @@ const SpotlightBrandTwo = () => {
       />
 
       <div className="spotlight-text-layer relative w-full h-full flex items-center justify-center">
-        {/* Outline */}
         <div className="outline-layer absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <h1
             className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] uppercase text-transparent"
@@ -197,7 +215,6 @@ const SpotlightBrandTwo = () => {
           </h1>
         </div>
 
-        {/* Spotlight */}
         <div
           className="spotlight-reveal absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0"
           style={{
