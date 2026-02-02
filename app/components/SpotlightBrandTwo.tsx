@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -20,33 +21,36 @@ const SpotlightBrandTwo = () => {
   const mouseY = useRef(0);
   const rafId = useRef<number | null>(null);
 
-  useGSAP(() => {
-    if (!containerRef.current) return;
+  useGSAP(
+    () => {
+      if (!containerRef.current) return;
 
-    xTo.current = gsap.quickTo(containerRef.current, "--x", {
-      duration: 0.8,
-      ease: "power4.out",
-    });
-    yTo.current = gsap.quickTo(containerRef.current, "--y", {
-      duration: 0.8,
-      ease: "power4.out",
-    });
+      xTo.current = gsap.quickTo(containerRef.current, "--x", {
+        duration: 0.8,
+        ease: "power4.out",
+      });
+      yTo.current = gsap.quickTo(containerRef.current, "--y", {
+        duration: 0.8,
+        ease: "power4.out",
+      });
 
-    xTextTo.current = gsap.quickTo(containerRef.current, "--tx", {
-      duration: 1,
-      ease: "power4.out",
-    });
-    yTextTo.current = gsap.quickTo(containerRef.current, "--ty", {
-      duration: 1,
-      ease: "power4.out",
-    });
+      xTextTo.current = gsap.quickTo(containerRef.current, "--tx", {
+        duration: 1,
+        ease: "power4.out",
+      });
+      yTextTo.current = gsap.quickTo(containerRef.current, "--ty", {
+        duration: 1,
+        ease: "power4.out",
+      });
 
-    gsap.fromTo(
-      ".spotlight-text-layer",
-      { opacity: 0, scale: 0.96 },
-      { opacity: 1, scale: 1, duration: 1.4, ease: "power3.out" }
-    );
-  }, { scope: containerRef });
+      gsap.fromTo(
+        ".spotlight-text-layer",
+        { opacity: 0, scale: 0.96 },
+        { opacity: 1, scale: 1, duration: 1.4, ease: "power3.out" }
+      );
+    },
+    { scope: containerRef }
+  );
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -97,7 +101,6 @@ const SpotlightBrandTwo = () => {
       ease: "power3.out",
     });
 
-    // ✅ Dim, don't hide
     gsap.to(".outline-layer", {
       opacity: 0.08,
       duration: 0.6,
@@ -146,13 +149,26 @@ const SpotlightBrandTwo = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className="relative w-full h-screen flex items-center justify-center overflow-hidden bg-black cursor-crosshair"
-      style={{
-        "--x": "-500px",
-        "--y": "-500px",
-        "--tx": "0px",
-        "--ty": "0px",
-      } as React.CSSProperties}
+      style={
+        {
+          "--x": "-500px",
+          "--y": "-500px",
+          "--tx": "0px",
+          "--ty": "0px",
+        } as React.CSSProperties
+      }
     >
+      {/* Top-left Logo */}
+      <div className="absolute top-10 left-14 z-50 pointer-events-none">
+        <Image
+          src="/kodaicBlack.jpeg"
+          alt="Kodaic Logo"
+          width={70}
+          height={70}
+          priority
+        />
+      </div>
+
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -168,7 +184,6 @@ const SpotlightBrandTwo = () => {
       />
 
       <div className="spotlight-text-layer relative w-full h-full flex items-center justify-center">
-
         {/* Outline */}
         <div className="outline-layer absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <h1
@@ -201,7 +216,6 @@ const SpotlightBrandTwo = () => {
             </h1>
           </div>
         </div>
-
       </div>
     </div>
   );
