@@ -1,174 +1,164 @@
 "use client";
 
-import React, { useRef } from "react";
-import { Hexagon, Mail, Linkedin, ArrowUpRight } from "lucide-react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP, ScrollTrigger);
-}
+import React from "react";
+import { ArrowUpRight, Instagram, Linkedin, Twitter, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const footerRef = useRef<HTMLElement>(null);
 
-  // Refs for GSAP quickSetters
-  const xTo = useRef<any>();
-  const yTo = useRef<any>();
-
-  useGSAP(() => {
-    // 1. Entrance Animation
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: footerRef.current,
-        start: "top 80%",
-        toggleActions: "play none none reverse",
-      }
-    });
-
-    tl.fromTo(".footer-content",
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, ease: "power2.out" }
-    );
-
-    // 2. Initialize Spotlight Physics
-    xTo.current = gsap.quickTo(footerRef.current, "--x", { duration: 0.4, ease: "power2.out" });
-    yTo.current = gsap.quickTo(footerRef.current, "--y", { duration: 0.4, ease: "power2.out" });
-
-  }, { scope: footerRef });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!footerRef.current || !xTo.current || !yTo.current) return;
-    const { left, top } = footerRef.current.getBoundingClientRect();
-    xTo.current(e.clientX - left);
-    yTo.current(e.clientY - top);
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
   };
 
-  const handleMouseEnter = () => {
-    gsap.to(".spotlight-layer", { opacity: 1, duration: 0.3, ease: "power2.out" });
-  };
-
-  const handleMouseLeave = () => {
-    gsap.to(".spotlight-layer", { opacity: 0, duration: 0.3, ease: "power2.out" });
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
   };
 
   return (
-    <footer
-      ref={footerRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="relative bg-[#112D4E] text-white font-sans overflow-hidden border-t border-white/10 min-h-screen flex flex-col justify-between"
-    >
+    <footer className="relative bg-[#050505] text-white overflow-hidden font-sans">
+      {/* Font Import */}
       <style dangerouslySetInnerHTML={{
         __html: `
         @import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800,700,500,400&display=swap');
+        .font-grotesk { font-family: 'Cabinet Grotesk', sans-serif; }
       `}} />
 
-      {/* --- CONTENT SECTION --- */}
-      {/* Added pb-32 to ensure content doesn't visually crash into the big text at the bottom */}
-      <div className="relative z-30 mx-auto max-w-7xl px-6 pt-24 pb-32 lg:px-8 w-full font-['Cabinet_Grotesk',sans-serif] pointer-events-none flex-grow">
-
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16 mb-16">
-
-          {/* Brand */}
-          <div className="footer-content space-y-6 pointer-events-auto">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/10 rounded-lg border border-white/20">
-                <Hexagon className="h-6 w-6 text-white fill-white/20" strokeWidth={2} />
-              </div>
-              <h2 className="text-2xl font-bold tracking-tight text-white">Kodia</h2>
-            </div>
-            <p className="text-base leading-relaxed max-w-sm text-blue-100/70">
-              Building reliable, scalable digital solutions with clean design and solid engineering principles.
-            </p>
+      {/* Main Content Container */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-20 pb-12 lg:px-8">
+        
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 mb-24"
+        >
+          {/* 1. CTA Section (Span 6) */}
+          <div className="lg:col-span-6 flex flex-col justify-between">
+            <motion.div variants={itemVariants}>
+              <h2 className="font-grotesk text-5xl md:text-7xl font-bold leading-[0.9] tracking-tight mb-8">
+                Ready to scale <br />
+                <span className="text-blue-500">your vision?</span>
+              </h2>
+              <p className="text-zinc-400 text-lg max-w-md mb-8">
+                We build digital products that look good and work even better. 
+                Let's turn your ideas into a scalable reality.
+              </p>
+              
+              <a 
+                href="mailto:hello@kodia.in"
+                className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full text-lg font-bold overflow-hidden transition-all hover:pr-10"
+              >
+                <span className="relative z-10">Start a Project</span>
+                <div className="absolute inset-0 bg-blue-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
+                <ArrowUpRight className="relative z-10 w-5 h-5 transition-transform group-hover:rotate-45" />
+              </a>
+            </motion.div>
           </div>
 
-          {/* Navigation */}
-          <div className="footer-content pointer-events-auto">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-6">Company</h3>
+          {/* 2. Navigation Links (Span 2) */}
+          <motion.div variants={itemVariants} className="lg:col-span-2 lg:col-start-8">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-6">Sitemap</h3>
             <ul className="space-y-4">
-              {['About', 'Services', 'Projects', 'Contact'].map((item) => (
+              {['Home', 'Services', 'Our Work', 'Agency', 'Careers'].map((item) => (
                 <li key={item}>
-                  <a href={`/${item.toLowerCase()}`} className="group inline-flex items-center gap-2 hover:text-white transition-all duration-300 text-blue-100/70">
-                    <span className="text-base font-medium">{item}</span>
-                    <ArrowUpRight className="h-4 w-4 opacity-0 -translate-y-1 translate-x-1 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all" />
-                  </a>
+                  <FooterLink href={`/${item.toLowerCase().replace(' ', '-')}`}>
+                    {item}
+                  </FooterLink>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
-          {/* Connect */}
-          <div className="footer-content pointer-events-auto">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-6">Connect</h3>
+          {/* 3. Socials / Contact (Span 2) */}
+          <motion.div variants={itemVariants} className="lg:col-span-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-6">Socials</h3>
             <ul className="space-y-4">
-              <li>
-                <a href="mailto:hello@kodia.in" className="group flex items-center gap-3 hover:text-white transition-colors duration-300 text-blue-100/70">
-                  <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/20 transition-colors">
-                    <Mail className="h-4 w-4" />
-                  </div>
-                  <span className="font-medium">hello@kodia.in</span>
-                </a>
-              </li>
-              <li>
-                <a href="#" className="group flex items-center gap-3 hover:text-white transition-colors duration-300 text-blue-100/70">
-                  <div className="p-2 rounded-full bg-white/5 group-hover:bg-[#0077b5] transition-colors">
-                    <Linkedin className="h-4 w-4" />
-                  </div>
-                  <span className="font-medium">LinkedIn</span>
-                </a>
-              </li>
+              <li><FooterLink href="#"><Linkedin className="w-4 h-4 inline mr-2" /> LinkedIn</FooterLink></li>
+              <li><FooterLink href="#"><Twitter className="w-4 h-4 inline mr-2" /> Twitter</FooterLink></li>
+              <li><FooterLink href="#"><Instagram className="w-4 h-4 inline mr-2" /> Instagram</FooterLink></li>
             </ul>
+          </motion.div>
+
+          {/* 4. Legal / Location (Span 2) */}
+          <motion.div variants={itemVariants} className="lg:col-span-2">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-6">Legal</h3>
+            <ul className="space-y-4">
+              <li><FooterLink href="/privacy">Privacy Policy</FooterLink></li>
+              <li><FooterLink href="/terms">Terms of Service</FooterLink></li>
+              <li><FooterLink href="/cookies">Cookie Policy</FooterLink></li>
+            </ul>
+          </motion.div>
+        </motion.div>
+
+        {/* Divider */}
+        <motion.div 
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: "circOut" }}
+          className="w-full h-[1px] bg-zinc-800 origin-left mb-8" 
+        />
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-zinc-500 text-sm">
+          <p>© {currentYear} Kodia Inc. All rights reserved.</p>
+          <div className="flex items-center gap-6">
+             <span className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                All Systems Operational
+             </span>
           </div>
         </div>
 
-        {/* Bottom Metadata */}
-        <div className="footer-content pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-medium text-blue-100/50 pointer-events-auto">
-          <p>© {currentYear} Kodia. All rights reserved.</p>
-          <div className="flex items-center gap-8">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms</a>
-          </div>
-        </div>
       </div>
 
-
-      {/* --- SPOTLIGHT TEXT LAYERS --- */}
-      {/* Layer 1: Ghostly Outline (Always Visible) */}
-      {/* justify-center and items-end ensures it sits perfectly at the bottom center */}
-      <div>
-
-        <div className="absolute inset-0 z-10 flex items-end justify-center overflow-hidden pointer-events-none">
-          <h1
-            className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] leading-[0.75] tracking-tighter uppercase whitespace-nowrap select-none text-transparent opacity-20"
-            style={{ WebkitTextStroke: '2px rgba(255, 255, 255, 0.1)' }}
-          >
-            Kodaic
-          </h1>
-        </div>
-
-        {/* Layer 2: The Spotlight Reveal */}
-        <div
-          className="spotlight-layer absolute inset-0 z-20 flex items-end justify-center overflow-hidden pointer-events-none opacity-0"
-          style={{
-            maskImage: `radial-gradient(circle 350px at calc(var(--x) * 1px) calc(var(--y) * 1px), black 20%, transparent 100%)`,
-            WebkitMaskImage: `radial-gradient(circle 350px at calc(var(--x) * 1px) calc(var(--y) * 1px), black 20%, transparent 100%)`,
-          }}
-        >
-          <h1 className="font-['Cabinet_Grotesk'] font-extrabold text-[23vw] leading-[0.75] tracking-tighter uppercase whitespace-nowrap select-none text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.5)]">
-            Kodaic
-          </h1>
-        </div>
+      {/* GIANT BACKGROUND TEXT (Watermark) */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none overflow-hidden select-none flex justify-center z-0">
+         <motion.h1 
+            initial={{ y: 100, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 0.1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="font-grotesk text-[28vw] leading-[0.7] font-black text-white opacity-5 tracking-tighter translate-y-[20%]"
+         >
+            KODIAC
+         </motion.h1>
       </div>
-
-      <div className="py-10">
-        <p className="text-center">© 2026 Kodia. All rights reserved.</p>
-      </div>
-
+      
+      {/* Subtle Gradient Overlay at bottom to fade text */}
+      <div className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-[#050505] to-transparent z-1 pointer-events-none" />
     </footer>
+  );
+};
+
+// Helper Component for Magnetic/Animated Links
+const FooterLink = ({ href, children }: { href: string, children: React.ReactNode }) => {
+  return (
+    <a 
+      href={href} 
+      className="group relative block overflow-hidden text-zinc-400 hover:text-white transition-colors duration-300 w-fit"
+    >
+      <span className="block transition-transform duration-300 group-hover:-translate-y-full">
+        {children}
+      </span>
+      <span className="absolute top-0 left-0 block translate-y-full transition-transform duration-300 group-hover:translate-y-0 text-blue-400">
+        {children}
+      </span>
+    </a>
   );
 };
 
