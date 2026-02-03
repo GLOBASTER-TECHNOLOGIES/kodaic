@@ -1,9 +1,8 @@
 "use client";
-import Hero from "./components/Hero";
-import CoreServices from "./components/CoreServices";
-import Footer from "./components/Footer";
-import CTASection from "./components/CTASection";
-import SpotlightBrandTwo from "./components/SpotlightBrandTwo";
+import Hero from "./components/main/Hero";
+import CoreServices from "./components/main/CoreServices";
+import CTASection from "./components/main/CTASection";
+import SpotlightBrandTwo from "./components/main/SpotlightBrandTwo";
 
 const page = () => {
   return (
