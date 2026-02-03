@@ -10,7 +10,8 @@ if (typeof window !== "undefined") {
 }
 
 const ContactHeader = () => {
-  const containerRef = useRef<HTMLSectionElement>(null);
+  // 🔧 FIX HERE: HTMLSectionElement → HTMLElement
+  const containerRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const textRef = useRef<HTMLParagraphElement>(null);
   const eyebrowRef = useRef<HTMLSpanElement>(null);
@@ -22,7 +23,7 @@ const ContactHeader = () => {
     gsap.set([eyebrowRef.current, headingRef.current, textRef.current], {
       y: 50,
       opacity: 0,
-      skewY: 2, // Adds a subtle distortion for a "serious" entrance
+      skewY: 2,
     });
 
     // Sequence Animation
@@ -37,7 +38,7 @@ const ContactHeader = () => {
       opacity: 1,
       skewY: 0,
       duration: 1.5,
-    }, "-=1.0") // Overlap specifically timed for momentum
+    }, "-=1.0")
     .to(textRef.current, {
       y: 0,
       opacity: 1,
@@ -59,7 +60,6 @@ const ContactHeader = () => {
 
       <div className="max-w-4xl mx-auto text-center">
         
-        {/* Eyebrow Text */}
         <div className="overflow-hidden mb-4">
           <span 
             ref={eyebrowRef} 
@@ -69,7 +69,6 @@ const ContactHeader = () => {
           </span>
         </div>
 
-        {/* Main Heading */}
         <div className="overflow-hidden mb-8">
           <h2 
             ref={headingRef} 
@@ -80,7 +79,6 @@ const ContactHeader = () => {
           </h2>
         </div>
 
-        {/* Subtext */}
         <div className="overflow-hidden">
           <p 
             ref={textRef} 
