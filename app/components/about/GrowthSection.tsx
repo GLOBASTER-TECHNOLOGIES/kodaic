@@ -99,7 +99,7 @@ const GrowthSection = () => {
                 <div className="space-y-6 max-w-3xl">
                     {/* Intro Paragraph: Slightly larger/darker */}
                     <p className="body-text text-lg md:text-xl text-[#112D4E] leading-relaxed font-medium">
-                        At KC Software Solutions, we believe that great technology is built by connecting the right pieces together. Just like our logo&apos;s signature dot, every small component matters in creating something extraordinary.
+                        At Kodaic Technologies, we believe that great technology is built by connecting the right pieces together. Just like our logo&apos;s signature dot, every small component matters in creating something extraordinary.
                     </p>
                 </div>
 
