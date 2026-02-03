@@ -56,7 +56,7 @@ const Footer = () => {
               </h2>
               <p className="text-zinc-400 text-lg max-w-md mb-8">
                 We build digital products that look good and work even better. 
-                Let's turn your ideas into a scalable reality.
+                Let&apo;s turn your ideas into a scalable reality.
               </p>
               
               <a 
