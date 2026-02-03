@@ -1,12 +1,14 @@
 import React from 'react'
 import ServicesHeader from '../components/services/ServicesHeader'
 import CTASection from '../components/services/CTASection'
+import ServiceStack from '../components/services/ServiceStack'
 
 const page = () => {
   return (
     <div>
-        <ServicesHeader />
-        <CTASection />
+      <ServicesHeader />
+      <ServiceStack />
+      <CTASection />
     </div>
   )
 }
