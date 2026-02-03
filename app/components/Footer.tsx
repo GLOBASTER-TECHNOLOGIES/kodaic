@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ArrowUpRight, Instagram, Linkedin, Twitter, Mail } from "lucide-react";
+import { ArrowUpRight, Instagram, Linkedin, Twitter } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Footer = () => {
@@ -71,7 +71,8 @@ const Footer = () => {
           </div>
 
           {/* 2. Navigation Links (Span 2) */}
-          <motion.div variants={itemVariants} className="lg:col-span-2 lg:col-start-8">
+          {/* Changed: Removed lg:col-start-8 so it sits next to CTA */}
+          <motion.div variants={itemVariants} className="lg:col-span-2">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-6">Sitemap</h3>
             <ul className="space-y-4">
               {['Home', 'Services', 'Our Work', 'Agency', 'Careers'].map((item) => (
@@ -84,7 +85,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* 3. Socials / Contact (Span 2) */}
+          {/* 3. Socials (Span 2) */}
           <motion.div variants={itemVariants} className="lg:col-span-2">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-6">Socials</h3>
             <ul className="space-y-4">
@@ -94,7 +95,7 @@ const Footer = () => {
             </ul>
           </motion.div>
 
-          {/* 4. Legal / Location (Span 2) */}
+          {/* 4. Legal (Span 2) - Now fits on the same row */}
           <motion.div variants={itemVariants} className="lg:col-span-2">
             <h3 className="text-sm font-semibold uppercase tracking-wider text-zinc-500 mb-6">Legal</h3>
             <ul className="space-y-4">
@@ -120,7 +121,7 @@ const Footer = () => {
           <div className="flex items-center gap-6">
              <span className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                All Systems Operational
+                Crafting your success
              </span>
           </div>
         </div>
