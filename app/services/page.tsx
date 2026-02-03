@@ -7,7 +7,7 @@ const page = () => {
   return (
     <div>
       <ServicesHeader />
-      <ServiceStack />
+      {/* <ServiceStack /> */}
       <CTASection />
     </div>
   )
